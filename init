@@ -1,4 +1,4 @@
 #! /bin/bash
 mount -t proc none /proc
-/sbin/ifconfig eth0 10.0.2.15
+strace /sbin/ifconfig eth0 10.0.2.15
 exec /bin/bash

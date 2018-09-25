@@ -1,3 +1,6 @@
-supermin.d
-min-initrd.d
+supermin.d*
+min-initrd.d*
 min-server/min-server
+bzImage
+vmlinux
+out*
