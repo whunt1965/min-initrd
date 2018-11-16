@@ -1,4 +1,4 @@
 #! /bin/bash
 mount -t proc none /proc
-strace /sbin/ifconfig eth0 10.0.2.15
+strace sysctl -w kernel.printk="2 4 1 7"
 exec /bin/bash
