@@ -4,3 +4,6 @@ min-server/min-server
 bzImage
 vmlinux
 out*
+mydiff
+newcall
+test/

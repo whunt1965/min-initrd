@@ -1,4 +1,4 @@
 #! /bin/bash
 mount -t proc none /proc
-strace sysctl -w kernel.printk="2 4 1 7"
+./newcall
 exec /bin/bash
