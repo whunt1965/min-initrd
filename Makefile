@@ -34,8 +34,14 @@ min-server/min-server: min-server/min-server.c
 supermin.d/min-server.tar.gz: min-server/min-server
 	tar -zcf $@ -C min-server min-server
 
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/min-server.tar.gz
-	supermin --build --format ext2 supermin.d -o ${@D}
+newcall: test/testit.c
+	gcc -o $@ $^
+
+supermin.d/newcall.tar.gz: newcall
+	tar -zcf $@ newcall
+
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/min-server.tar.gz supermin.d/min-server.tar.gz supermin.d/newcall.tar.gz
+	supermin --build -v --format ext2 supermin.d -o ${@D}
 
 runL: all 
 	$(QEMU) -nodefaults -smp 4 -nographic -kernel $(KERNEL) -initrd min-initrd.d/initrd -hda min-initrd.d/root -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr" -device e1000,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
