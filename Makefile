@@ -34,7 +34,7 @@ min-server/min-server: min-server/min-server.c
 supermin.d/min-server.tar.gz: min-server/min-server
 	tar -zcf $@ -C min-server min-server
 
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/min-server.tar.gz supermin.d/min-server.tar.gz supermin.d/newcall.tar.gz
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/min-server.tar.gz supermin.d/min-server.tar.gz
 	supermin --build -v --format ext2 supermin.d -o ${@D}
 
 runL: all 
