@@ -34,12 +34,6 @@ min-server/min-server: min-server/min-server.c
 supermin.d/min-server.tar.gz: min-server/min-server
 	tar -zcf $@ -C min-server min-server
 
-newcall: test/testit.c
-	gcc -o $@ $^
-
-supermin.d/newcall.tar.gz: newcall
-	tar -zcf $@ newcall
-
 $(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/min-server.tar.gz supermin.d/min-server.tar.gz supermin.d/newcall.tar.gz
 	supermin --build -v --format ext2 supermin.d -o ${@D}
 
