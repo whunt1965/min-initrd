@@ -35,7 +35,6 @@ supermin.d/min-server.tar.gz: min-server/min-server
 	tar -zcf $@ -C min-server min-server
 
 supermin.d/memcached.tar.gz:
-	cp ../memcached/memcached .
 	tar -zcf $@ memcached
 
 $(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/min-server.tar.gz supermin.d/min-server.tar.gz supermin.d/memcached.tar.gz
