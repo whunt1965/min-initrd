@@ -1,4 +1,4 @@
-PACKAGES = bash coreutils iputils net-tools strace util-linux sudo
+PACKAGES = bash coreutils iputils net-tools strace util-linux memcached 
 SMD = supermin.d
 
 QEMU = qemu-system-x86_64
@@ -37,7 +37,7 @@ supermin.d/min-server.tar.gz: min-server/min-server
 supermin.d/memcached.tar.gz:
 	tar -zcf $@ memcached
 
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/min-server.tar.gz supermin.d/min-server.tar.gz supermin.d/memcached.tar.gz
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/min-server.tar.gz supermin.d/min-server.tar.gz #supermin.d/memcached.tar.gz
 	supermin --build -v --format ext2 supermin.d -o ${@D}
 
 runL: all 
