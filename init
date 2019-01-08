@@ -1,4 +1,5 @@
 #! /bin/bash
-mount -t proc none /proc
-./newcall
+# mount -t proc none /proc
+/sbin/ifconfig eth0 up
+./memcached -p 5555
 exec /bin/bash
