@@ -1,4 +1,4 @@
-PACKAGES = bash coreutils iputils net-tools strace util-linux memcached 
+PACKAGES = bash coreutils iputils net-tools strace util-linux memcached iperf3
 SMD = supermin.d
 
 QEMU = qemu-system-x86_64
@@ -41,13 +41,13 @@ $(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/min-server
 	supermin --build -v --format ext2 supermin.d -o ${@D}
 
 runL: all 
-	$(QEMU) -nodefaults -smp 4 -nographic -kernel $(KERNEL) -initrd min-initrd.d/initrd -hda min-initrd.d/root -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr" -device e1000,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
+	$(QEMU) -nodefaults -nographic -kernel $(KERNEL) -initrd min-initrd.d/initrd -hda min-initrd.d/root -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr" -device e1000,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
 
 debugL: all 
 	$(QEMU) -nodefaults -s -S -smp 4 -nographic -kernel $(KERNEL) -initrd min-initrd.d/initrd -hda min-initrd.d/root -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr" -device e1000,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
 
 runU: all 
-	$(QEMU) -nodefaults -nographic -smp 4 -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr" -device e1000,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
+	$(QEMU) -nodefaults -nographic -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr" -device e1000,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
 
 debugU: all
 	$(QEMU) -nodefaults -s -S -nographic -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr" -device e1000,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
