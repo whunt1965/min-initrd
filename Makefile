@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 PACKAGES = bash coreutils iputils net-tools strace util-linux #memcached 
-=======
-PACKAGES = bash coreutils iputils net-tools strace util-linux memcached iperf3
->>>>>>> 04e65cb4089d12bb4a3a19ff74b25d1b5158bc7e
 SMD = supermin.d
 
 QEMU = qemu-system-x86_64
