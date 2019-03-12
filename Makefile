@@ -50,7 +50,7 @@ runU:
 	$(QEMU) -m 1G -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr" #-device e1000,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
 
 debugU: 
-	$(QEMU) -m 1G -s -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr" # -device e1000,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
+	$(QEMU) -m 1G -s -S -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr" # -device e1000,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
 
 #runU:   
 #	$(QEMU) -m 1G -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -monitor stdio # -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr" #-device e1000,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
