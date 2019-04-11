@@ -15,3 +15,7 @@ nmvml
 segNvmlinux
 uklstartup
 uklsymbols
+bzImage.noidea
+bzImage.old
+log
+log2
