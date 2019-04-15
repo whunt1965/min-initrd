@@ -1,6 +1,7 @@
 #! /bin/bash
 mount -t proc none /proc
 strace /sbin/ifconfig eth0 10.0.2.15 
+./min-server
 # /sbin/groupadd -g 1000 mc
 # /sbin/useradd -p mc -u 1000 -g 1000 memcached
 #/bin/mknod -m 0666 /dev/random c 1 8

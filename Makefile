@@ -4,7 +4,7 @@ SMD = supermin.d
 QEMU = qemu-system-x86_64
 KERNEL = ./bzImage
 
-KERNELU = ../current/linux/arch/x86/boot/bzImage
+KERNELU = ../linux/arch/x86/boot/bzImage
 
 TARGET = min-initrd.d
 
@@ -45,8 +45,8 @@ runL: all
 debugL:  
 	$(QEMU) -nodefaults -m 1G -s -S -nographic -kernel $(KERNEL) -initrd min-initrd.d/initrd -hda min-initrd.d/root -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr" # -device e1000,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
 
-runU: 
-	$(QEMU) -m 1G -s -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0" -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
+runU: #all
+	$(QEMU) -enable-kvm -m 1G -s -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0" -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
 
 debugU: 
 	$(QEMU) -m 1G -s -S -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslrnet.ifnames=0 biosdevname=0" -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
