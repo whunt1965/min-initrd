@@ -32,13 +32,5 @@ supermin.d/init.tar.gz: init
 $(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz 
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 
-runL: all
-	$(QEMU) -nodefaults -m 1G -s -nographic -kernel $(KERNEL) -initrd min-initrd.d/initrd -hda min-initrd.d/root -serial stdio -append "console=ttyS0 root=/dev/sda nokaslrnet.ifnames=0 biosdevname=0" -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
-debugL:	all  
-	$(QEMU) -nodefaults -m 1G -s -S -nographic -kernel $(KERNEL) -initrd min-initrd.d/initrd -hda min-initrd.d/root -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr" 
-
 runU: all
 	$(QEMU) -enable-kvm -m 1G -s -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0" -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
-
-debugU: all
-	$(QEMU) -m 1G -s -S -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslrnet.ifnames=0 biosdevname=0" -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
