@@ -29,15 +29,15 @@ supermin.d/packages: supermin
 supermin.d/init.tar.gz: init
 	tar zcf $@ $^
 
-min-server/min-server: min-server/min-server.c
+ukl-syscall/ukl-syscall: ukl-syscall/ukl-syscall.c
 	gcc -o $@ $^
-supermin.d/min-server.tar.gz: min-server/min-server
-	tar -zcf $@ -C min-server min-server
+supermin.d/ukl-syscall.tar.gz: ukl-syscall/ukl-syscall
+	tar -zcf $@ -C ukl-syscall ukl-syscall
 
 supermin.d/server.tar.gz:
 	tar -zcf $@ server
 
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/min-server.tar.gz supermin.d/min-server.tar.gz supermin.d/server.tar.gz
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/ukl-syscall.tar.gz #supermin.d/ukl-syscall.tar.gz supermin.d/server.tar.gz
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 
 runL: all
