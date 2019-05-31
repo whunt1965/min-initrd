@@ -29,7 +29,10 @@ supermin.d/packages: supermin
 supermin.d/init.tar.gz: init
 	tar zcf $@ $^
 
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz 
+supermin.d/mmmain.tar.gz: mmmain
+	tar zcf $@ $^
+
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/mmmain.tar.gz
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 
 runU: #all
