@@ -35,7 +35,7 @@ supermin.d/user.tar.gz: userstack
 $(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz 
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 
-runU:
+runU: all
 	$(QEMU) -enable-kvm -smp 4  -m 10G -s -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti nosmap" -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
 
 debugU: 
