@@ -1,10 +1,18 @@
-PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils 
+PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils
 SMD = supermin.d
 
 QEMU = qemu-system-x86_64
-KERNEL = ./bzImage
-
-KERNELU = ../linux/arch/x86/boot/bzImage
+options = -enable-kvm -smp 12 -m 10G -s
+DEBUG = -S
+KERNEL = -kernel /bzImage
+KERNELU = -kernel ../linux/arch/x86/boot/bzImage
+SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
+DISPLAY = -nodefaults -nographic -serial stdio
+MONITOR = -nodefaults -nographic -serial mon:stdio
+# COMMANDLINE = -append "ftrace=function ftrace_dump_on_oops console=ttyS0 root=/dev/sda nokaslr net.ifn
+ames=0 biosdevname=0 nopti nosmap"
+COMMANDLINE = -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti nosmap"
+NETWORK = -device virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
 
 TARGET = min-initrd.d
 
@@ -12,37 +20,47 @@ TARGET = min-initrd.d
 all: clean $(TARGET)/root
 
 clean:
-	clear
+        clear
 
 supermin:
-	@if [ ! -a $(SMD)/packages -o '$(PACKAGES) ' != "$$(tr '\n' ' ' < $(SMD)/packages)" ]; then \
-	  $(MAKE) --no-print-directory build-package; \
-	else \
-	  touch $(SMD)/packages; \
-	fi
+        @if [ ! -a $(SMD)/packages -o '$(PACKAGES) ' != "$$(tr '\n' ' ' < $(SMD)/packages)" ]; then \
+          $(MAKE) --no-print-directory build-package; \
+        else \
+          touch $(SMD)/packages; \
+        fi
 
 build-package:
-	supermin --prepare $(PACKAGES) -o $(SMD)
+        supermin --prepare $(PACKAGES) -o $(SMD)
 
 supermin.d/packages: supermin
 
 supermin.d/init.tar.gz: init
-	tar zcf $@ $^
+        tar zcf $@ $^
 
-supermin.d/usermultithreadedserver.tar.gz: usermultithreadedserver
-	tar zcf $@ $^
+supermin.d/user.tar.gz: userstack
+        tar zcf $@ $^
 
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/usermultithreadedserver.tar.gz
-	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz
+        supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 
-runL: #all
-	$(QEMU) -enable-kvm -m 10G -s -kernel $(KERNEL) -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti" -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555 -redir tcp:5556::5556 -redir tcp:5557::5557 -redir tcp:5558::5558 -redir tcp:5559::5559 -redir tcp:5560::5560 -redir tcp:5561::5561 -redir tcp:5562::5562 -redir tcp:5563::5563 -redir tcp:5564::5564
-
-debugL: 
-	$(QEMU) -m 10G -s -S -kernel $(KERNEL) -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti" -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
-
-runU: #all
-	$(QEMU) -enable-kvm -m 10G -s -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti" -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555 -redir tcp:5556::5556 -redir tcp:5557::5557 -redir tcp:5558::5558 -redir tcp:5559::5559 -redir tcp:5560::5560 -redir tcp:5561::5561 -redir tcp:5562::5562 -redir tcp:5563::5563 -redir tcp:5564::5564
+runU:
+        $(QEMU) $(options) $(KERNELU) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
 
 debugU: 
-	$(QEMU) -m 10G -s -S -kernel $(KERNELU) -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti" -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555
+        $(QEMU) $(options) $(DEBUG) $(KERNELU) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
+
+runL: 
+        $(QEMU) $(options) $(KERNEL) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
+
+debugL: all
+        $(QEMU) $(options) $(DEBUG) $(KERNEL) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
+
+monU:
+        $(QEMU) $(options) $(KERNELU) $(SMOptions) $(MONITOR) $(COMMANDLINE) $(NETWORK)
+
+
+# ftrace=function ftrace_dump_on_oops ftrace_notrace=ptdump_walk_pgd_level_core,ktime_get,_raw_spin_unlo
+ck_irqrestore,idle_cpu,irqtime_account_irq,_raw_spin_lock_irqsave,kvm_steal_clock,__accumulate_pelt_segm
+ents,rcu_dynticks_eqs_exit,update_rq_clock,update_irq_load_avg,__msecs_to_jiffies
+                                                                                      61,1          Bot
+
