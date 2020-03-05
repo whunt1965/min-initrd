@@ -6,7 +6,7 @@ options = -enable-kvm -smp 4 -m 10G -s
 DEBUG = -S
 KERNEL = .-kernel /bzImage
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
-SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
+SMOptions = -initrd min-initrd.d/initrd #-hda min-initrd.d/root
 DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
 COMMANDLINE = -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti nosmap"
