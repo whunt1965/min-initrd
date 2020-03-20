@@ -1,3 +1,5 @@
 #! /bin/bash
 /sbin/ifconfig eth0 10.0.2.15 
+mkdir /mnt/tfs/
+mount -t tmpfs -o size=4g tmpfs /mnt/tfs/
 exec /bin/bash
