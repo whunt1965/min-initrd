@@ -2,11 +2,11 @@ PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils
 SMD = supermin.d
 
 QEMU = qemu-system-x86_64
-options = -enable-kvm -smp 4 -m 10G -s
+options = -enable-kvm -smp 4 -m 20G -s
 DEBUG = -S
 KERNEL = .-kernel /bzImage
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
-SMOptions = -initrd min-initrd.d/initrd #-hda min-initrd.d/root
+SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
 DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
 COMMANDLINE = -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti nosmap"
@@ -35,10 +35,13 @@ supermin.d/packages: supermin
 supermin.d/init.tar.gz: init
 	tar zcf $@ $^
 
-supermin.d/user.tar.gz: userstack
+lebench:
+	gcc -o $@ OS_Eval.c -lpthread --static
+
+supermin.d/lebench.tar.gz: lebench
 	tar zcf $@ $^
 
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz 
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/lebench.tar.gz
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 
 runU:
