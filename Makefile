@@ -2,7 +2,7 @@ PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils
 SMD = supermin.d
 
 QEMU = qemu-system-x86_64
-options = -enable-kvm -smp 4 -m 10G -s
+options = -enable-kvm -smp 4 -m 20G -s
 DEBUG = -S
 KERNEL = .-kernel /bzImage
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
