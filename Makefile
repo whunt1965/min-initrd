@@ -2,7 +2,7 @@ PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils
 SMD = supermin.d
 
 QEMU = qemu-system-x86_64
-options = -enable-kvm -m 20G -s
+options = -enable-kvm -smp 16 -m 20G -s
 DEBUG = -S
 KERNEL = .-kernel /bzImage
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
@@ -10,9 +10,13 @@ SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
 DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
 #COMMANDLINE = -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti nosmap ftrace=function_graph ftrace_dump_on_oops"
-COMMANDLINE = -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti nosmap mds=off"
-NETWORK = -device virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::11211-:11211
+#COMMANDLINE = -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti nosmap mds=off" # ftrace=function_graph ftrace_dump_on_oops"
+COMMANDLINE = -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti nosmap mds=off ip=192.168.19.136:::255.255.255.0::eth0:none"
+#COMMANDLINE = -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti nosmap mds=off ip=192.168.19.136:::255.255.255.0::eth0:none ftrace=function ftrace_dump_on_oops"
+#NETWORK = -device virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::11211-:11211
 #NETWORK = -device virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::11211-:11211 -object filter-dump,id=f1,netdev=usernet,file=dump.dat
+#NETWORK = -device e1000,netdev=usernet,mac=52:55:00:d1:55:44 -netdev tap,id=usernet,ifname=alitap,script=no,downscript=0
+NETWORK = -device virtio-net,netdev=usernet,mac=52:55:00:d1:55:44 -netdev tap,id=usernet,ifname=alitap,script=no,downscript=0
 
 TARGET = min-initrd.d
 
@@ -44,7 +48,7 @@ $(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 
 runU:
-	$(QEMU) $(options) $(KERNELU) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
+	taskset -c 0-15 $(QEMU) $(options) $(KERNELU) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
 
 debugU: 
 	$(QEMU) $(options) $(DEBUG) $(KERNELU) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
@@ -57,3 +61,7 @@ debugL: all
 
 monU:
 	$(QEMU) $(options) $(KERNELU) $(SMOptions) $(MONITOR) $(COMMANDLINE) $(NETWORK)
+
+E1000_NET_DEV=-device e1000,netdev=usernet,mac=52:55:00:d1:55:42 -netdev tap,id=usernet,ifname=alitap,script=no,downscript=0
+runTU:
+	$(QEMU) $(options) $(KERNELU) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(E1000_NET_DEV)
