@@ -2,11 +2,11 @@ PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils
 SMD = supermin.d
 
 QEMU = qemu-system-x86_64
-options = -enable-kvm -m 20G -s
+options = -enable-kvm -m 20G -smp 2 -s
 DEBUG = -S
 KERNEL = .-kernel /bzImage
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
-SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
+SMOptions ?= -initrd min-initrd.d/initrd -hda min-initrd.d/root
 DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
 COMMANDLINE = -append "console=ttyS0 root=/dev/sda nokaslr net.ifnames=0 biosdevname=0 nopti nosmap mds=off ip=192.168.19.136:::255.255.255.0::eth0:none"
