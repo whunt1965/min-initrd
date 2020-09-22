@@ -1,8 +1,8 @@
-PACKAGES = bash coreutils iputils net-tools strace util-linux iproute2 pciutils memcached ethtool
+PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils memcached ethtool
 SMD = supermin.d
 
-QEMU = taskset -c 6-11 qemu-system-x86_64 -cpu host
-options = -enable-kvm -smp 6 -m 30G
+QEMU = taskset -c 2-15 qemu-system-x86_64 -cpu host
+options = -enable-kvm -smp 14 -m 30G
 DEBUG = -S
 KERNEL = .-kernel /bzImage
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
@@ -11,7 +11,7 @@ DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
 COMMANDLINE = -append "console=ttyS0 root=/dev/sda nosmap mds=off ip=192.168.19.136:::255.255.255.0::eth0:none"
 #NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on -device virtio-net-pci,netdev=vlan1,mac=02:00:00:04:00:29
-NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=6 -device virtio-net-pci,mq=on,vectors=8,netdev=vlan1,mac=02:00:00:04:00:29
+NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=14 -device virtio-net-pci,mq=on,vectors=16,netdev=vlan1,mac=02:00:00:04:00:29
 TARGET = min-initrd.d
 
 .PHONY: all supermin build-package clean
@@ -50,7 +50,10 @@ supermin.d/usersignal.tar.gz: usersignal
 supermin.d/lebench.tar.gz: lebench
 	tar zcf $@ $^
 
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/lebench.tar.gz
+supermin.d/set_irq_affinity_virtio.sh.tar.gz: set_irq_affinity_virtio.sh
+	tar zcf $@ $^
+
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/set_irq_affinity_virtio.sh.tar.gz
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 
 runU:

@@ -1,5 +1,6 @@
 #! /bin/bash
-#mount -t proc none /proc
+mount -t proc none /proc
+mount -t sysfs none /sys
 # /sbin/groupadd -g 1000 mc
 # /sbin/useradd -p mc -u 1000 -g 1000 memcached
 #/bin/mknod -m 0666 /dev/random c 1 8
