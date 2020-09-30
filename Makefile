@@ -67,7 +67,7 @@ supermin.d/echoserver.tar.gz: echoserver
 supermin.d/lebench.tar.gz: lebench
 	tar zcf $@ $^
 
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/lebench.tar.gz
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz 
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 
 exportmods:
