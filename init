@@ -1,11 +1,7 @@
 #! /bin/bash
 mount -t proc none /proc
-strace /sbin/ifconfig eth0 10.0.2.15 
-./min-server
-# /sbin/groupadd -g 1000 mc
-# /sbin/useradd -p mc -u 1000 -g 1000 memcached
-#/bin/mknod -m 0666 /dev/random c 1 8
-#/bin/mknod -m 0666 /dev/urandom c 1 9
-#/bin/chown root:root /dev/random /dev/urandom
-# su memcached
+mount -t sysfs none /sys
+echo "doing an ls"
+ls
+#kexec -p bzImage --initrd=final-initrd.cpio.gz --append="root=/dev/ram0 rw irqpoll nosmp maxcpus=0 reset_devices console=ttyS0,115200 ip=192.168.19.8:::255.255.255.0::eth0:none appMac='90:e2:ba:ad:96:d4' appIp='192.168.19.8/24' appNode='neu-15-8' appCtlServer='192.168.1.2' appCtlUser='root' appCtlDir='' appCtlFile='neu-15-8.pipe' appEnd='sshd'"
 exec /bin/bash
