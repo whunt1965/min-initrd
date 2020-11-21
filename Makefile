@@ -41,12 +41,7 @@ supermin.d/init.tar.gz: init
 supermin.d/user.tar.gz: userstack
 	tar zcf $@ $^
 
-supermin.d/mykexec.tar.gz:
-	rm -rf mykexec/
-	cp -r ../../crashkernel/mykexec .
-	tar zcf supermin.d/mykexec.tar.gz mykexec
-
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/mykexec.tar.gz
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 
 runU:
