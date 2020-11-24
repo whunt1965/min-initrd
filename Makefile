@@ -1,4 +1,4 @@
-PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils memcached ethtool kmod strace kexec-tools
+PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils memcached ethtool kmod strace perf
 
 SMD = supermin.d
 
@@ -10,7 +10,8 @@ KERNELU = -kernel ../linux/arch/x86/boot/bzImage
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
 DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
-COMMANDLINE = -append "crashkernel=1G@64M console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nosmap mds=off ip=192.168.19.136:::255.255.255.0::eth0:none -u root -t 6 -m 16G -c 8192 -b 8192 -B binary"
+#COMMANDLINE = -append "crashkernel=1G@64M console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nosmap mds=off ip=192.168.19.136:::255.255.255.0::eth0:none -u root -t 6 -m 16G -c 8192 -b 8192 -B binary"
+COMMANDLINE = -append "crashkernel=1G@64M console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nosmap mds=off ip=192.168.19.136:::255.255.255.0::eth0:none 0 ali"
 NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=6 -device virtio-net-pci,mq=on,vectors=10,netdev=vlan1,mac=02:00:00:04:00:29
 # 0 ukl57nosswitch
 TARGET = min-initrd.d
