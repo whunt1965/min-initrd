@@ -1,13 +1,16 @@
 #! /bin/bash
-#mount -t proc none /proc
-# /sbin/groupadd -g 1000 mc
-# /sbin/useradd -p mc -u 1000 -g 1000 memcached
-#/bin/mknod -m 0666 /dev/random c 1 8
-#/bin/mknod -m 0666 /dev/urandom c 1 9
-#/bin/chown root:root /dev/random /dev/urandom
-# su memcached
-echo RUNNING MEMCACHED "memcached -u nobody -t 16 -m 16G -c 8192 -b 8192 -B binary"
-memcached -u nobody -t 16 -m 16G -c 8192 -b 8192 -B binary
-#mkdir /mytmpfs
-#mount -t tmpfs -o size=4g tmpfs /mytmpfs
+mount -t proc none /proc
+mount -t sysfs none /sys
+mount -t debugfs none /sys/kernel/debug/
+
+echo deleting then creating mytmpfs
+rm -rf mytmpfs
+mkdir /mytmpfs
+mount -t tmpfs -o size=4g tmpfs /mytmpfs
+
+#echo memcached -u root -t 6 -m 16G -c 8192 -b 8192 -B binary
+
+#echo perf record -a -g -- sleep 10
+
 exec /bin/bash
+
