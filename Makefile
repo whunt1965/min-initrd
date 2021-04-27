@@ -1,10 +1,10 @@
 PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils ethtool kmod strace perf python
 SMD = supermin.d
 
-SMP = 2
-TS = 0-1
-QUEUES = 2
-VECTORS = 6
+SMP = 8
+TS = 8-15
+QUEUES = 8
+VECTORS = 18
 
 QEMU = taskset -c $(TS) qemu-system-x86_64 -cpu host
 options = -enable-kvm -smp cpus=$(SMP) -m 30G -s
@@ -13,8 +13,10 @@ KERNELU = -kernel ../linux/arch/x86/boot/bzImage
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
 DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
-COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nosmap mds=off ip=192.168.19.108:::255.255.255.0::eth0:none -- 0 ukl"
-NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=$(QUEUES) -device virtio-net-pci,mq=on,vectors=$(VECTORS),netdev=vlan1,mac=02:00:00:04:00:29
+COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nosmap mds=off ip=192.168.19.135:::255.255.255.0::eth0:none -- --protected-mode no --save '' --appendonly no"
+NETWORK = -netdev tap,id=vlan1,ifname=test_tap,script=no,downscript=no,vhost=on,queues=$(QUEUES) -device virtio-net-pci,mq=on,vectors=$(VECTORS),netdev=vlan1,mac=02:00:00:04:00:29
+
+# COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nosmap mds=off ip=192.168.19.135:::255.255.255.0::eth0:none -- 0 ukl --protected-mode no --save '' --appendonly no"
 
 TARGET = min-initrd.d
 
