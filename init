@@ -1,16 +1,18 @@
 #! /bin/bash
 mount -t proc none /proc
 mount -t sysfs none /sys
-mount -t debugfs none /sys/kernel/debug/
+#mount -t debugfs none /sys/kernel/debug/
 
-echo deleting then creating mytmpfs
+#echo deleting then creating mytmpfs
 rm -rf mytmpfs
 mkdir /mytmpfs
 mount -t tmpfs -o size=4g tmpfs /mytmpfs
 
-#echo memcached -u root -t 6 -m 16G -c 8192 -b 8192 -B binary
+#echo Pinning virt queues to cores
+./set_irq_affinity_virtio.sh
 
-#echo perf record -a -g -- sleep 10
+#/sbin/ip addr add 10.0.2.15 dev eth0
+#/sbin/ip link set dev eth0 up
 
 exec /bin/bash
 
