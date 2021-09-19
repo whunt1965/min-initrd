@@ -49,8 +49,8 @@ supermin:
 	  $(MAKE) --no-print-directory build-package; \
 	else \
 	  touch $(SMD)/packages; \
-	fi
-	cp ../mybench_small.static .
+	#fi
+	#cp ../mybench_small.static .
 
 build-package:
 	supermin --prepare $(PACKAGES) -o $(SMD)
