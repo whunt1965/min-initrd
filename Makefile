@@ -48,8 +48,8 @@ supermin:
 	@if [ ! -a $(SMD)/packages -o '$(PACKAGES) ' != "$$(tr '\n' ' ' < $(SMD)/packages)" ]; then \
 	  $(MAKE) --no-print-directory build-package; \
 	else \
-	  touch $(SMD)/packages;
-	#fi
+	  touch $(SMD)/packages; \
+	fi
 	#cp ../mybench_small.static .
 
 build-package:
