@@ -1,6 +1,7 @@
 PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils ethtool kmod strace perf python vim
 SMD = supermin.d
 
+SHELL = /bin/bash
 SMP = 4
 TS = 8-11
 QUEUES = 4
