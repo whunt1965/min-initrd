@@ -50,7 +50,7 @@ supermin:
 	else \
 	  touch $(SMD)/packages; \
 	fi
-	#cp ../mybench_small.static .
+	cp ../mybench_small.static .
 
 build-package:
 	supermin --prepare $(PACKAGES) -o $(SMD)
