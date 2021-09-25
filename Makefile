@@ -39,7 +39,7 @@ NETWORK2 = -netdev tap,id=vlan1,ifname=tap2,script=no,downscript=no,vhost=on,que
 TARGET = min-initrd.d
 
 .PHONY: all supermin build-package clean
-all: clean $(TARGET)/root
+all: $(TARGET)/root
 
 clean:
 	clear
