@@ -7,8 +7,10 @@ TS = 8-11
 QUEUES = 4
 VECTORS = 10
 
-QEMU = taskset -c $(TS) qemu-system-x86_64 -cpu host
-options = -enable-kvm -smp cpus=$(SMP) -m 30G
+#QEMU = taskset -c $(TS) qemu-system-x86_64 -cpu host
+QEMU = qemu-system-x86_64 -cpu host
+#options = -enable-kvm -smp cpus=$(SMP) -m 30G
+options = -enable-kvm -smp cpus=$(SMP) -m 2048
 DEBUG = -S -s
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
@@ -91,7 +93,7 @@ supermin.d/init.tar.gz: init
 #	cp $(TARGET)/root $(TARGET)/root2
 
 # Added from original min_initrd makefile and edited to comply with original build instruc
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz 
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz
 	#supermin --build --format ext2 supermin.d -o ${@D}
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 	- rm -rf $(TARGET)/root2
