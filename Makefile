@@ -1,23 +1,29 @@
-PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils ethtool kmod strace perf python vim
+PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils ethtool kmod strace perf python vim mount grep sed
 SMD = supermin.d
 
 SHELL = /bin/bash
-SMP = 4
+#SMP = 4
+SMP = 1
 TS = 8-11
 QUEUES = 4
 VECTORS = 10
 
 #QEMU = taskset -c $(TS) qemu-system-x86_64 -cpu host
-QEMU = qemu-system-x86_64 -cpu host
+#QEMU = qemu-system-x86_64 -cpu host
+QEMU = qemu-system-x86_64
 #options = -enable-kvm -smp cpus=$(SMP) -m 30G
-options = -enable-kvm -smp cpus=$(SMP) -m 2048
+#options = -enable-kvm -smp cpus=$(SMP) -m 3g
+options = -smp cpus=$(SMP) -m 3g
 DEBUG = -S -s
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
 DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
-COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=192.168.19.136:::255.255.255.0::eth0:none -- -m /workloads/iperf.xml -a"
+COMMANDLINE = -append "console=ttyS0 root=/dev/sda rw  net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=192.168.19.136:::255.255.255.0::eth0:none -- -m /workloads/iperf.xml -a"
+#COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=192.168.19.136:::255.255.255.0::eth0:none"
 NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=$(QUEUES) -device virtio-net-pci,mq=on,vectors=$(VECTORS),netdev=vlan1,mac=02:00:00:04:00:29
+#NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=$(QUEUES) -device virtrio-blk-device  mq=on,vectors=$(VECTORS),netdev=vlan1,mac=02:00:00:04:00:29
+#NETWORK = 
 
 #-----------------------------------------------
 

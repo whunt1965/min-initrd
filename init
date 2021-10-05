@@ -1,4 +1,31 @@
 #! /bin/bash
+
+echo "Welcome to supermin"
+PATH=/sbin:/usr/sbin:/bin:/usr/bin
+export PATH
+
+# Debian bug 606622.
+RUNLEVEL=S
+PREVLEVEL=N
+export RUNLEVEL PREVLEVEL
+#echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
+#echo "root::10933:0:99999:7:::" > etc/shadow
+#echo "root:x:0:" > etc/group
+
+#export PATH=/bin:/sbin:/usr/bin:/usr/sbin
+#if [ "$PS1" ]; then
+#    export PS1='# '
+#    export USER=root
+#    export LOGNAME=$USER
+#    export HOSTNAME=`cat /etc/hostname`
+#    export HISTSIZE=100
+#    export HISTFILESIZE=100
+#    export PAGER='/bin/more '
+#fi;
+
+#bash -i
+#export GPG_TTY=$(tty)
+
 mount -t proc none /proc
 mount -t sysfs none /sys
 #mount -t debugfs none /sys/kernel/debug/
@@ -8,11 +35,53 @@ rm -rf mytmpfs
 mkdir /mytmpfs
 mount -t tmpfs -o size=4g tmpfs /mytmpfs
 
+echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
+echo "root::10933:0:99999:7:::" > etc/shadow
+echo "root:x:0:" > etc/group
+
+
+echo "export PATH=/bin:/sbin:/usr/bin:/usr/sbin" > etc/profile
+echo "if [ "$PS1" ]; then
+    export PS1='# '
+    export USER=root
+    export LOGNAME=$USER
+    export HOSTNAME=`cat /etc/hostname`
+    export HISTSIZE=100
+    export HISTFILESIZE=100
+    export PAGER='/bin/more '
+fi;" > etc/profile
+
 #echo Pinning virt queues to cores
 #./set_irq_affinity_virtio.sh
 
 #/sbin/ip addr add 10.0.2.15 dev eth0
 #/sbin/ip link set dev eth0 up
 
-exec /bin/bash
+#/sbin/getty -l sh -n 38400 tty0
+
+#/sbin/getty -L ttyS0 115200 vt100
+
+#set -m
+
+#bash -i
+
+# Get name of the serial port, from console= passed by libguestfs.
+# XXX Consider using /proc/consoles
+guestfs_serial=$(grep -Eo 'console=[^[:space:]]+' /proc/cmdline |
+                 sed s/console=//)
+# The shell is opened by default on /dev/console, which (on Linux)
+# is not a controlling terminal, causing job control to fail.  For
+# how we work around this, see:
+# https://busybox.net/FAQ.html#job_control
+run_bash_with_ctty ()
+{
+   setsid bash -c \
+   "exec bash </dev/$guestfs_serial >/dev/$guestfs_serial 2>&1"
+}
+
+run_bash_with_ctty
+
+bash -i
+
+#exec /bin/bash
 
