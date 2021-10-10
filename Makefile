@@ -1,4 +1,4 @@
-PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils ethtool kmod strace perf python vim mount grep sed
+PACKAGES = bash ld-linux coreutils iputils net-tools strace util-linux iproute pciutils ethtool kmod strace perf python vim mount grep sed
 SMD = supermin.d
 
 SHELL = /bin/bash
