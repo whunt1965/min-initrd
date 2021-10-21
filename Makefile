@@ -13,7 +13,7 @@ VECTORS = 10
 QEMU = qemu-system-x86_64
 #options = -enable-kvm -smp cpus=$(SMP) -m 30G
 #options = -enable-kvm -smp cpus=$(SMP) -m 3g
-options = -smp cpus=$(SMP) -m 3g -no-reboot
+options = -smp cpus=$(SMP) -m 3g
 DEBUG = -S -s
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
