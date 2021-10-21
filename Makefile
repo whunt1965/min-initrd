@@ -17,8 +17,8 @@ options = -smp cpus=$(SMP) -m 3g -no-reboot
 DEBUG = -S -s
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
-DISPLAY = -nodefaults -nographic -serial file:"../test.out"
-#DISPLAY = -nodefaults -nographic -serial file:tmp.out
+DISPLAY = -nodefaults -nographic -serial stdio
+#DISPLAY = -nodefaults -nographic -serial file:"../test.out"
 MONITOR = -nodefaults -nographic -serial mon:stdio
 COMMANDLINE = -append "console=ttyS0 root=/dev/sda rw  net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=192.168.19.136:::255.255.255.0::eth0:none -- -m /workloads/iperf.xml -a"
 #COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=192.168.19.136:::255.255.255.0::eth0:none"
