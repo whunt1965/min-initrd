@@ -2,23 +2,24 @@ PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils e
 SMD = supermin.d
 
 SHELL = /bin/bash
-SMP = 4
-TS = 8-11
+SMP = 1
+TS = 8
 QUEUES = 4
 VECTORS = 10
 
 #QEMU = taskset -c $(TS) qemu-system-x86_64 -cpu host
 QEMU = qemu-system-x86_64 -cpu host
 #options = -enable-kvm -smp cpus=$(SMP) -m 30G
-options = -enable-kvm -smp cpus=$(SMP) -m 2048
-DEBUG = -S -s
+options = -enable-kvm -smp cpus=$(SMP) -m 2048 -s
+DEBUG = -S
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
 DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
-COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=192.168.19.136:::255.255.255.0::eth0:none -- -m /workloads/iperf.xml -a"
-NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=$(QUEUES) -device virtio-net-pci,mq=on,vectors=$(VECTORS),netdev=vlan1,mac=02:00:00:04:00:29
-
+#COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=192.168.19.136:::255.255.255.0::eth0:none -- -m /workloads/iperf.xml -a"
+COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap mds=off ip=10.0.2.15:::255.255.255.0::eth0:none -- -u nobody"
+#NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=$(QUEUES) -device virtio-net-pci,mq=on,vectors=$(VECTORS),netdev=vlan1,mac=02:00:00:04:00:29
+NETWORK = -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::11211-:11211
 #-----------------------------------------------
 
 SMP2 = 4
