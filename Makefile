@@ -8,7 +8,7 @@ QUEUES = 4
 VECTORS = 10
 
 #QEMU = taskset -c $(TS) qemu-system-x86_64 -cpu host
-QEMU = qemu-system-x86_64 -cpu host
+QEMU = qemu-system-x86_64
 #options = -enable-kvm -smp cpus=$(SMP) -m 30G
 options = -enable-kvm -smp cpus=$(SMP) -m 2048
 DEBUG = -S -s
