@@ -71,6 +71,9 @@ supermin.d/init.tar.gz: init
 
 supermin.d/shutdown.tar.gz: shutdown
 	tar zcf $@ $^
+
+supermin.d/unit_test.tar.gz: unit_test
+	tar zcf $@ $^
 #supermin.d/workloads.tar.gz: workloads
 #	tar zcf $@ $^
 
@@ -102,7 +105,7 @@ supermin.d/shutdown.tar.gz: shutdown
 #	cp $(TARGET)/root $(TARGET)/root2
 
 # Added from original min_initrd makefile and edited to comply with original build instruc
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/shutdown.tar.gz
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/shutdown.tar.gz supermin.d/unit_test.tar.gz
 	#supermin --build --format ext2 supermin.d -o ${@D}
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 	- rm -rf $(TARGET)/root2
