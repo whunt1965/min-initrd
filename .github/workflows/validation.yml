@@ -38,5 +38,5 @@ jobs:
         
       # Runs a single command using the runners shell
       - name: Run test in QEMU
-        run: sudo timeout 5m qemu-system-x86_64 -m 2g -kernel bzImage -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda"
+        run: sudo timeout 2m qemu-system-x86_64 -m 2g -kernel bzImage -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda"
 
