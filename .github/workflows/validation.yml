@@ -1,0 +1,40 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Validation tests
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install git build-essential flex bison supermin libelf-dev libssl-dev texinfo libgmp3-dev libmpc-dev libmpfr-dev qemu-kvm
+      
+      # Runs a single command using the runners shell
+      - name: Make RFS
+        run: make all
+        
+      # Runs a single command using the runners shell
+      - name: Run test in QEMU
+        run: sudo timeout 5m qemu-system-x86_64 -m 2g -kernel ../bzImage -initrd min-initrd.d/initrd -hda min-initrd.d/root -nodefaults -nographic -serial stdio -append "console=ttyS0 root=/dev/sda"
+
