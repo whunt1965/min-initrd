@@ -1,4 +1,4 @@
-PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils ethtool kmod strace perf python vim t
+PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils ethtool kmod strace perf python vim mount
 SMD = supermin.d
 
 SHELL = /bin/bash
@@ -16,8 +16,8 @@ KERNELU = -kernel ../linux/arch/x86/boot/bzImage
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
 DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
-COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip="
-NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=$(QUEUES) -device virtio-net-pci9
+COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=192.168.19.136:::255.255.255.0::eth0:none -- -m /workloads/iperf.xml -a"
+NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=$(QUEUES) -device virtio-net-pci,mq=on,vectors=$(VECTORS),netdev=vlan1,mac=02:00:00:04:00:29
 
 #-----------------------------------------------
 
@@ -33,8 +33,8 @@ KERNELU2 = -kernel ../linux/arch/x86/boot/bzImage
 SMOptions2 = -initrd min-initrd.d/initrd -hda min-initrd.d/root2
 DISPLAY2 = -nodefaults -nographic -serial stdio
 MONITOR2 = -nodefaults -nographic -serial mon:stdio
-COMMANDLINE2 = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nosmap mds=off ip=192.168.19.137:::"
-NETWORK2 = -netdev tap,id=vlan1,ifname=tap2,script=no,downscript=no,vhost=on,queues=$(QUEUES2) -device virtio-net-p0
+COMMANDLINE2 = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nosmap mds=off ip=192.168.19.137:::255.255.255.0::eth0:none -- -m /workloads/iperf.xml -a"
+NETWORK2 = -netdev tap,id=vlan1,ifname=tap2,script=no,downscript=no,vhost=on,queues=$(QUEUES2) -device virtio-net-pci,mq=on,vectors=$(VECTORS2),netdev=vlan1,mac=02:00:00:04:00:30
 
 #-----------------------------------------------
 
@@ -106,7 +106,7 @@ exportmods:
 runU:
 	$(QEMU) $(options) $(KERNELU) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
 
-debugU:
+debugU: 
 	$(QEMU) $(options) $(DEBUG) $(KERNELU) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
 
 monU:
@@ -114,4 +114,5 @@ monU:
 
 runU2:
 	$(QEMU2) $(options2) $(KERNELU2) $(SMOptions2) $(DISPLAY2) $(COMMANDLINE2) $(NETWORK2)
+
 
