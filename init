@@ -8,6 +8,10 @@ rm -rf mytmpfs
 mkdir /mytmpfs
 mount -t tmpfs -o size=4g tmpfs /mytmpfs
 
+echo "root:x:0:0:root:/root:/bin/sh" > etc/passwd
+echo "root::10933:0:99999:7:::" > etc/shadow
+echo "root:x:0:" > etc/group
+
 #echo Pinning virt queues to cores
 #./set_irq_affinity_virtio.sh
 
