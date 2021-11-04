@@ -1,4 +1,4 @@
-PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils ethtool kmod strace perf python vim mount
+PACKAGES = bash coreutils iputils net-tools strace util-linux iproute pciutils ethtool kmod strace perf python vim
 SMD = supermin.d
 
 SHELL = /bin/bash
@@ -6,20 +6,23 @@ SMP = 1
 TS = 8
 QUEUES = 4
 VECTORS = 10
+#SMP = 1
+#TS = 8
+#QUEUES = 2
+#VECTORS = 4
 
-#QEMU = taskset -c $(TS) qemu-system-x86_64 -cpu host
-QEMU = qemu-system-x86_64 -cpu host
-#options = -enable-kvm -smp cpus=$(SMP) -m 30G
-options = -enable-kvm -smp cpus=$(SMP) -m 2048 -s
+QEMU = qemu-system-x86_64
+options = -smp cpus=$(SMP) -m 3G -s
 DEBUG = -S
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
 DISPLAY = -nodefaults -nographic -serial stdio
 MONITOR = -nodefaults -nographic -serial mon:stdio
-#COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=192.168.19.136:::255.255.255.0::eth0:none -- -m /workloads/iperf.xml -a"
-COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=10.0.2.15:::255.255.255.0::eth0:none -- -u root"
+#COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap mds=off ip=192.168.19.136:::255.255.255.0::eth0:none -- -u nobody"
+COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=10.0.2.15:::255.255.255.0::eth0:none -- -u root -p 11255"
 #NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queues=$(QUEUES) -device virtio-net-pci,mq=on,vectors=$(VECTORS),netdev=vlan1,mac=02:00:00:04:00:29
-NETWORK = -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::11211-:11211
+NETWORK = -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::11255-:11255
+
 #-----------------------------------------------
 
 SMP2 = 4
@@ -42,7 +45,7 @@ NETWORK2 = -netdev tap,id=vlan1,ifname=tap2,script=no,downscript=no,vhost=on,que
 TARGET = min-initrd.d
 
 .PHONY: all supermin build-package clean
-all: $(TARGET)/root
+all: clean $(TARGET)/root
 
 clean:
 	clear
@@ -53,7 +56,7 @@ supermin:
 	else \
 	  touch $(SMD)/packages; \
 	fi
-	#cp ../mybench_small.static .
+#	cp ../mybench_small.static .
 
 build-package:
 	supermin --prepare $(PACKAGES) -o $(SMD)
@@ -63,39 +66,31 @@ supermin.d/packages: supermin
 supermin.d/init.tar.gz: init
 	tar zcf $@ $^
 
-#supermin.d/workloads.tar.gz: workloads
-#	tar zcf $@ $^
+supermin.d/workloads.tar.gz: workloads
+	tar zcf $@ $^
 
-#supermin.d/uperf.static.tar.gz: uperf.static
-#	tar zcf $@ $^
+supermin.d/uperf.static.tar.gz: uperf.static
+	tar zcf $@ $^
 
-#supermin.d/netperf.static.tar.gz: netperf.static
-#	tar zcf $@ $^
+supermin.d/netperf.static.tar.gz: netperf.static
+	tar zcf $@ $^
 
-#supermin.d/netserver.static.tar.gz: netserver.static
-#	tar zcf $@ $^
+supermin.d/netserver.static.tar.gz: netserver.static
+	tar zcf $@ $^
 
-#supermin.d/set_irq_affinity_virtio.sh.tar.gz: set_irq_affinity_virtio.sh
-#	tar zcf $@ $^
+supermin.d/set_irq_affinity_virtio.sh.tar.gz: set_irq_affinity_virtio.sh
+	tar zcf $@ $^
 
-#supermin.d/mybench_small.static.tar.gz: mybench_small.static
-#	tar zcf $@ $^
+supermin.d/mybench_small.static.tar.gz: mybench_small.static
+	tar zcf $@ $^
 
-#supermin.d/mybench.static.tar.gz: mybench.static
-#	tar zcf $@ $^
+supermin.d/mybench.static.tar.gz: mybench.static
+	tar zcf $@ $^
 
-#supermin.d/server.static.tar.gz: server.static
-#	tar zcf $@ $^
+supermin.d/server.static.tar.gz: server.static
+	tar zcf $@ $^
 
-#$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz supermin.d/workloads.tar.gz \
-#	supermin.d/set_irq_affinity_virtio.sh.tar.gz supermin.d/mybench_small.static.tar.gz
-#	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
-#	- rm -rf $(TARGET)/root2
-#	cp $(TARGET)/root $(TARGET)/root2
-
-# Added from original min_initrd makefile and edited to comply with original build instruc
-$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz
-	#supermin --build --format ext2 supermin.d -o ${@D}
+$(TARGET)/root: supermin.d/packages supermin.d/init.tar.gz 
 	supermin --build -v -v -v --size 8G --if-newer --format ext2 supermin.d -o ${@D}
 	- rm -rf $(TARGET)/root2
 	cp $(TARGET)/root $(TARGET)/root2
