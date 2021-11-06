@@ -12,6 +12,9 @@ DEBUG = -S -s
 KERNELU = -kernel ../linux/arch/x86/boot/bzImage
 SMOptions = -initrd min-initrd.d/initrd -hda min-initrd.d/root
 
+#-----------------------------------------------
+
+#QEMU Options for generic Unit Tests
 DISPLAY = -nodefaults -nographic -serial file:"../test.out"
 MONITOR = -nodefaults -nographic -serial mon:stdio
 COMMANDLINE = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=192.168.19.136:::255.255.255.0::eth0:none -- -m /workloads/iperf.xml -a"
@@ -19,6 +22,12 @@ NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queu
 
 #-----------------------------------------------
 
+#QEMU Options for Memcached
+DISPLAY_MEMC = -nodefaults -nographic -serial stdio
+COMMANDLINE_MEMC = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=10.0.2.15:::255.255.255.0::eth0:none -- -u ukl_user -p 11255"
+NETWORK_MEMC = -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::11255-:11255
+
+#-----------------------------------------------
 SMP2 = 4
 TS2 = 12-15
 QUEUES2 = 4
@@ -73,8 +82,13 @@ exportmods:
 	export SUPERMIN_KERNEL=/mnt/normal/linux/arch/x86/boot/bzImage
 	export SUPERMIN_MODULES=/mnt/normal/min-initrd/kmods/lib/modules/5.7.0+/
 
+#Normal QEMU Run
 runU:
 	$(QEMU) $(options) $(KERNELU) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
+
+#Memcached QEMU Run
+runU_memcached:
+	$(QEMU) $(options) $(KERNELU) $(SMOptions) $(DISPLAY_MEMC) $(COMMANDLINE_MEMC) $(NETWORK_MEMC)
 
 debugU: 
 	$(QEMU) $(options) $(DEBUG) $(KERNELU) $(SMOptions) $(DISPLAY) $(COMMANDLINE) $(NETWORK)
