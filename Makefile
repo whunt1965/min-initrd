@@ -24,7 +24,7 @@ NETWORK = -netdev tap,id=vlan1,ifname=tap0,script=no,downscript=no,vhost=on,queu
 
 #QEMU Options for Memcached
 DISPLAY_MEMC = -nodefaults -nographic -serial stdio
-COMMANDLINE_MEMC = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=127.0.0.1:::255.255.255.0::eth0:none -- -u ukl_user -p 5555"
+COMMANDLINE_MEMC = -append "console=ttyS0 root=/dev/sda net.ifnames=0 biosdevname=0 nowatchdog nosmap nosmep mds=off ip=10.1.0.50:::255.255.255.0::eth0:none -- -u ukl_user -p 5555"
 NETWORK_MEMC = -device  virtio-net,netdev=usernet -netdev user,id=usernet,hostfwd=tcp::5555-:5555 
 
 #-----------------------------------------------
